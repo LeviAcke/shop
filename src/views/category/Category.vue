@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <h1>首页</h1>
-    </div>
+<div>
+    <h1>
+        分类
+    </h1>
+</div>
 </template>
 
  <script>
 export default {
-    name:'Home' 
+    name:'Category' 
 }
 </script> 
  <style scoped>

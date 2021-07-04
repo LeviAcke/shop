@@ -38,6 +38,22 @@
 05. css 公共样式
 https://github.com/necolas/normalize.css
 
+
+06. 配置代理，解决跨域
+        devServer: {
+        proxy: {
+            '/api': {
+                target: 'https://api.shop.eduwork.cn', //接口域名
+                changeOrigin: true,             //是否跨域
+                ws: true,                       //是否代理 websockets
+                secure: true,                   //是否https接口
+                pathRewrite: {                  //路径重置
+                    '^/api': ''
+                }
+            }
+        }
+    }
+
 ## Project setup
 ```
 npm install
