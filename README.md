@@ -1,5 +1,7 @@
 # shop
 
+01. 上传远程仓库
+
 ## Project setup
 ```
 npm install
