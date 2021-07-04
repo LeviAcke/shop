@@ -5,7 +5,7 @@
       <div class="icon"><i class="iconfont icon-shouye1-copy"></i></div>
       <div>首页</div>
     </router-link>
-    <router-link class="tab-bar-item" to="/detail">
+    <router-link class="tab-bar-item" to="/category">
       <div class="icon">
         <i class="iconfont icon-leimupinleifenleileibie"></i>
       </div>
