@@ -7,6 +7,3 @@ export function getHomeAllDate() {
         method: 'get',
     })
 }
-export function getBanner() {
-
-}
