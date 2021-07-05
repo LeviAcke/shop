@@ -28,7 +28,7 @@ export default {
   setup() {
     const router = useRouter();
     const goDetail = (id) => {
-      router.push({ path: "/detail", query: { id } });
+      router.push({ path: "/detail", query: {id}});
     };
     return {
       goDetail,
@@ -44,6 +44,7 @@ export default {
   padding: 15px 0 30px;
   border-bottom: 10px solid #ccc;
   font-size: 12px;
+
   .recommend-item {
     flex: 1;
     img {

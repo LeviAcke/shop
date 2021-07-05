@@ -1,15 +1,28 @@
 <template>
-  <div>
+  <div id="home">
     <NavBar>
       <template v-slot:default>shop</template>
     </NavBar>
-    <div class="banner">
-      <img src="~assets/images/1.jpg" alt="" />
+    <TabControl
+      v-show="isTabFixed"
+      :titles="['畅销', '新书', '精选']"
+      @tabClick="tabClick"
+    ></TabControl>
+    <div class="wrapper">
+      <div class="content">
+        <div ref="banref">
+          <div class="banner">
+            <img src="~assets/images/1.jpg" alt="" />
+          </div>
+          <RecommendView :recommends="recommends"> </RecommendView>
+        </div>
+
+        <TabControl :titles="['畅销', '新书', '精选']" @tabClick="tabClick">
+        </TabControl>
+        <GoodsList :goods="showGoods"> </GoodsList>
+      </div>
     </div>
-    <RecommendView :recommends="recommends"> </RecommendView>
-    <TabControl :titles="['畅销', '新书', '精选']" @tabClick="tabClick">
-    </TabControl>
-    <GoodsList :goods="showGoods"> </GoodsList>
+    <BackTop v-show="isShowBackTop" @bTop="bTop"> </BackTop>
   </div>
 </template>
 
@@ -17,9 +30,11 @@
 import NavBar from "components/common/navbar/NavBar";
 import RecommendView from "./ChildComps/RecommendView.vue";
 import { getHomeAllDate, getHomeGoods } from "network/home";
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, watchEffect, nextTick } from "vue";
 import TabControl from "components/content/tabcontrol/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
+import BScroll from "better-scroll";
+import BackTop from "components/common/backtop/BackTop";
 export default {
   name: "Home",
   setup() {
@@ -33,8 +48,13 @@ export default {
       recommend: { page: 0, list: [] },
     });
 
+    let bs = reactive({});
+
     let currentType = ref("sales");
 
+    let isTabFixed = ref(false);
+    let isShowBackTop = ref(false);
+    let banref = ref(null);
     const showGoods = computed(() => {
       return goods[currentType.value].list;
     });
@@ -63,19 +83,67 @@ export default {
           goods.new.list = res.goods.data;
         })
         .catch(() => {});
+
+      // 创建 betterScroll 对象
+      bs = new BScroll(document.querySelector(".wrapper"), {
+        probeType: 3,
+        click: true,
+        pullUpLoad: true,
+      });
+
+      // 触发滚动事件
+      // eslint-disable-next-line no-unused-vars
+      bs.on("scroll", (position) => {
+        isShowBackTop.value = isTabFixed.value =
+          -position.y >= banref.value.offsetHeight ? true : false;
+      });
+      // 上拉加载数据，触发 pullingup
+      bs.on("pullingUp", () => {
+        const page = goods[currentType.value].page + 1;
+
+        getHomeGoods(currentType.value, page).then((res) => {
+          goods[currentType.value].list.push(...res.goods.data);
+          goods[currentType.value].page += 1;
+        });
+        // 完成上拉，等数据请求完成，要将新数据展示出来
+        bs.finishPullUp();
+        // 重新计算高度
+        bs.refresh();
+      });
     });
 
     const tabClick = (index) => {
       temid.value = index;
       let types = ["sales", "new", "recommend"];
       currentType.value = types[index];
+      nextTick(() => {
+        // 重新计算高度
+        bs && bs.refresh();
+      });
     };
+
+    // 监听任何一个变量有变化
+    watchEffect(() => {
+      nextTick(() => {
+        // 重新计算高度
+        bs && bs.refresh();
+      });
+    });
+    const bTop = () => {
+      console.log("123");
+      bs.scrollTo(0, 0,300);
+    };
+
     return {
       recommends,
       tabClick,
       temid,
       goods,
       showGoods,
+      isTabFixed,
+      banref,
+      isShowBackTop,
+      bTop,
     };
   },
   components: {
@@ -83,6 +151,7 @@ export default {
     RecommendView,
     TabControl,
     GoodsList,
+    BackTop,
   },
 };
 </script> 
@@ -90,9 +159,17 @@ export default {
 .banner img {
   width: 100%;
   height: auto;
-  margin-top: 45px;
 }
-p {
-  text-align: center;
+#home {
+  height: 100vh;
+  position: relative;
+  .wrapper {
+    position: absolute;
+    top: 45px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+  }
 }
 </style>

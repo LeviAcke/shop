@@ -1,5 +1,11 @@
 <template>
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <transition>
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </transition>
+  </router-view>
   <div id="nav">
     <router-link class="tab-bar-item" to="/">
       <div class="icon"><i class="iconfont icon-shouye1-copy"></i></div>
@@ -32,7 +38,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  box-shadow: 0 -5px 10px rgba(100, 100, 100, .2);
+  box-shadow: 0 -5px 10px rgba(100, 100, 100, 0.2);
 
   a {
     color: var(--color-text);
