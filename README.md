@@ -54,6 +54,11 @@ https://github.com/necolas/normalize.css
         }
     }
 
+
+07. 
+    滚动处理
+    https://better-scroll.github.io/docs/zh-CN/plugins/
+
 ## Project setup
 ```
 npm install

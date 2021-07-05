@@ -11,9 +11,7 @@
     <div class="wrapper">
       <div class="content">
         <div ref="banref">
-          <div class="banner">
-            <img src="~assets/images/1.jpg" alt="" />
-          </div>
+          <HomeSwiper :banners="banners" > </HomeSwiper>
           <RecommendView :recommends="recommends"> </RecommendView>
         </div>
 
@@ -35,6 +33,7 @@ import TabControl from "components/content/tabcontrol/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import BScroll from "better-scroll";
 import BackTop from "components/common/backtop/BackTop";
+import HomeSwiper from "./ChildComps/HomeSwiper.vue";
 export default {
   name: "Home",
   setup() {
@@ -47,6 +46,7 @@ export default {
       new: { page: 0, list: [] },
       recommend: { page: 0, list: [] },
     });
+    const banners = ref([]);
 
     let bs = reactive({});
 
@@ -63,6 +63,7 @@ export default {
       getHomeAllDate()
         .then((res) => {
           recommends.value = res.goods.data;
+          banners.value = res.slides;
         })
         .catch(() => {});
 
@@ -131,7 +132,7 @@ export default {
     });
     const bTop = () => {
       console.log("123");
-      bs.scrollTo(0, 0,300);
+      bs.scrollTo(0, 0, 300);
     };
 
     return {
@@ -144,6 +145,7 @@ export default {
       banref,
       isShowBackTop,
       bTop,
+      banners,
     };
   },
   components: {
@@ -152,14 +154,12 @@ export default {
     TabControl,
     GoodsList,
     BackTop,
+    HomeSwiper,
   },
 };
 </script> 
  <style scoped lang='less'>
-.banner img {
-  width: 100%;
-  height: auto;
-}
+
 #home {
   height: 100vh;
   position: relative;

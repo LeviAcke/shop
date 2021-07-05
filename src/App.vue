@@ -18,7 +18,11 @@
       <div>分类</div>
     </router-link>
     <router-link class="tab-bar-item" to="/shopcart">
-      <div class="icon"><i class="iconfont icon-gouwuche"></i></div>
+      <div class="icon">
+        <van-badge :content="30" max="9">
+          <i class="iconfont icon-gouwuche"></i>
+        </van-badge>
+      </div>
       <div>购物车</div>
     </router-link>
     <router-link class="tab-bar-item" to="/profile">
@@ -56,7 +60,7 @@
       display: inline-block;
       width: 24px;
       height: 24px;
-      margin-top: 3px;
+      margin-top: 8px;
       vertical-align: middle;
     }
   }
